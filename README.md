@@ -8,7 +8,7 @@ If [ you are looking for such a common requirement as a base Container ]:
 # Credits:
 * This project leverage many what Stain's stain/jena-docker GIT project.
 * It is just not practical to fork from stain/jena-docker since there are a few structure changes.
-* Though this project is fully forked from stain/jena-docker, there are quite a few reuse from stain/jena-docker.
+* Though this project is not forked from stain/jena-docker, there are quite a few reuse from stain/jena-docker.
 
 # Components:
 * OpenJDK Java 11 base image
