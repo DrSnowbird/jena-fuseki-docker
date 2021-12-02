@@ -1,0 +1,14 @@
+{ "head": {
+    "vars": [ "subject" , "predicate" , "object" ]
+  } ,
+  "results": {
+    "bindings": [
+      { 
+        "subject": { "type": "uri" , "value": "http://test.domain/ns#book1" } ,
+        "predicate": { "type": "uri" , "value": "http://purl.org/dc/elements/1.1/title" } ,
+        "object": { "type": "literal" , "value": "Design Patterns" }
+      }
+    ]
+  }
+}
+

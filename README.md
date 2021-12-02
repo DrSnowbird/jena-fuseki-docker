@@ -1,3 +1,5 @@
+# (Beta version - for developers only)
+
 # Apache Fuseki TDB (Tuple DB) + Java 11 OpenJDK with no root access 
 * A RDF Fuseki TDB w/ Java 11 base Container with `no root access` (except using `sudo ...` and you can remove it using `sudo apt-get remove sudo` to protect your Container). 
 ```

@@ -1,0 +1,13 @@
+PREFIX ex: <http://www.example.org/vocabulary#>
+PREFIX : <http://www.example.org/exampleDocument#> 
+
+SELECT ?subject ?predicate ?object
+WHERE {
+  #GRAPH <http://dig.isi.edu/> {
+  #GRAPH :monicaGraph {
+  #GRAPH :DEFAULT {
+  GRAPH <http://vitro.mannlib.cornell.edu/default/vitro-kb-2> {
+  ?subject ?predicate ?object
+  }
+}
+LIMIT 100
