@@ -7,6 +7,22 @@ MAINTAINER DrSnowbird "DrSnowbird@openkbs.org"
 # Portions of the code are from Stain's Fuseki github
 MAINTAINER Stian Soiland-Reyes <stain@apache.org>
 
+USER 0
+
+##################################
+#### ---- Tools: setup:  ---- ####
+##################################
+ENV LANG C.UTF-8
+RUN set -eux; \
+    apt-get update; \
+    apt-get install -y --no-install-recommends \
+       bash curl ca-certificates findutils coreutils gettext pwgen; \
+    apt-get autoremove; \
+    rm -rf /var/lib/apt/lists/*
+
+#    bash curl ca-certificates findutils coreutils gettext pwgen procps tini ; \
+RUN echo "vm.max_map_count=262144" | sudo tee -a /etc/sysctl.conf
+
 USER ${USER:-developer}
 WORKDIR ${HOME:-/home/developer}
 
@@ -51,19 +67,6 @@ COPY --chown=${USER}:${USER} app/tdbloader ${FUSEKI_HOME}/
 COPY --chown=${USER}:${USER} app/tdbloader2 ${FUSEKI_HOME}/
 RUN sudo chmod +x /docker-entrypoint.sh ${FUSEKI_HOME}/load.sh ${FUSEKI_HOME}/tdbloader ${FUSEKI_HOME}/tdbloader2
 
-##################################
-#### ---- Tools: setup:  ---- ####
-##################################
-ENV LANG C.UTF-8
-RUN sudo set -eux; \
-    sudo apt-get update; \
-    sudo apt-get install -y --no-install-recommends \
-       bash curl ca-certificates findutils coreutils gettext pwgen procps tini ; \
-    sudo apt-get autoremove; \
-    sudo rm -rf /var/lib/apt/lists/*
-
-RUN echo "vm.max_map_count=262144" | sudo tee -a /etc/sysctl.conf
-
 #VOLUME /staging
 
 USER ${USER}
@@ -80,7 +83,8 @@ EXPOSE 3030
 #COPY --chown=${USER}:${USER} app/fuseki_config.ttl {FUSEKI_HOME}/
 #CMD ["bash", "-c", "${FUSEKI_HOME}/fuseki-server"]
 
-ENTRYPOINT ["/usr/bin/tini", "--", "/docker-entrypoint.sh"]
+#ENTRYPOINT ["/usr/bin/tini", "--", "/docker-entrypoint.sh"]
+ENTRYPOINT ["/docker-entrypoint.sh"]
 RUN sudo chmod +x /docker-entrypoint.sh ${FUSEKI_HOME}/load.sh ${FUSEKI_HOME}/tdbloader ${FUSEKI_HOME}/tdbloader2
 #CMD ["/home/developer/jena-fuseki/fuseki-server --config=fuseki_config.ttl"]
 CMD ["/home/developer/jena-fuseki/fuseki-server"]
