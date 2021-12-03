@@ -36,3 +36,6 @@ If [ you are looking for such a common requirement as a base Container ]:
 * run.sh - run the container
 * shell.sh - shell into the container
 * stop.sh - stop the container
+
+# Issues
+* When running inside coporate Cloud VMware VM, you might encounter the /home/developer/fuseki/databases file can not be written. This is due to your host user ID not 1000 and the container is running user ID 1000. You need to figure out the user ID issue by yourself. I can only help so far with this open source Fuseki TDB server. You might want to ask your network or IT adminstrator to help you solve this issle.

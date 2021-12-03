@@ -4,24 +4,8 @@ FROM ${BASE}
 MAINTAINER DrSnowbird "DrSnowbird@openkbs.org"
 
 ## ---- Disclosure and Credits: ---- ####
-# Portions of the code are from Stain's Fuseki github
-MAINTAINER Stian Soiland-Reyes <stain@apache.org>
-
-USER 0
-
-##################################
-#### ---- Tools: setup:  ---- ####
-##################################
-ENV LANG C.UTF-8
-RUN set -eux; \
-    apt-get update; \
-    apt-get install -y --no-install-recommends \
-       bash curl ca-certificates findutils coreutils gettext pwgen; \
-    apt-get autoremove; \
-    rm -rf /var/lib/apt/lists/*
-
-#    bash curl ca-certificates findutils coreutils gettext pwgen procps tini ; \
-RUN echo "vm.max_map_count=262144" | sudo tee -a /etc/sysctl.conf
+# Portions of the code are from Stain's Fuseki github (https://github.com/stain/jena-docker)
+MAINTAINER DrSnowbird "DrSnowbird@openkbs.org"
 
 USER ${USER:-developer}
 WORKDIR ${HOME:-/home/developer}
