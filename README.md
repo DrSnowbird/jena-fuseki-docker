@@ -40,3 +40,21 @@ If [ you are looking for such a common requirement as a base Container ]:
 # Issues
 * Most likely, the root cause is the mis-alignment of owner between host's 'fuseki' (root or <you>) and the folder mapping to /home/developer/fuseki.
 * Makesure you first 'mkdir ./databases' before you run 'docker-compose up'
+
+# Resources:
+* [Apache Jena Home](https://jena.apache.org/index.html)
+* [Apache Jena TDB2 Command Line Tools](https://jena.apache.org/documentation/tdb2/tdb2_cmds.html)
+* [Apache Jena Ontology API](https://jena.apache.org/documentation/ontology/)
+* [Apache Jean Inference API](https://jena.apache.org/documentation/inference/index.html)
+* [SPARQL 1.1 Query Language](https://www.w3.org/TR/sparql11-query/)
+* [SPARQL 1.1 Graph Store HTTP Protocol](https://www.w3.org/TR/sparql11-http-rdf-update/)
+* [HyperGraphQL Demo](https://www.hypergraphql.org/demo/)
+* [GraphQL Schema & Service Generator](https://github.com/genesis-upc/Ontology2GraphQL)
+
+# Things to know about TDB/TDB2
+* (per TDB document page - do not direct access TDB/TDB2 as multi-concurrent access/update since doing this might corrupt the database). Always use SPARQL HTTP REST API for Query and Update.
+* (digested from the TDB/TDB2) A TDB dataset should only be directly accessed from a single JVM at a time otherwise data corruption may occur. From 1.1.0 onwards TDB includes automatic protection against multi-JVM usage which prevents this under most circumstances.
+
+If you wish to share a TDB dataset between multiple applications please use our Fuseki component which provides a SPARQL server that can use TDB for persistent storage and provides the SPARQL protocols for query, update and REST update over HTTP.
+
+
