@@ -1,6 +1,12 @@
 version: '3.1' 
 
 services:
+#  fuseki-database:
+#    container_name: fuseki-database
+#    image: busybox
+#    volumes:
+#      - /fuseki
+      
   jena-fuseki-docker:
     container_name: jena-fuseki-docker
     image: openkbs/jena-fuseki-docker
@@ -8,7 +14,6 @@ services:
       context: .
       dockerfile: Dockerfile
     restart: always
-    gpus: all
     env_file:
       - ./.env
     environment:
@@ -44,19 +49,21 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
       #- ./certificates:/home/developer/certificates
       ## ==== Use $HOME/data-docker as base directory: ====
-      - $HOME/data-docker/jena-fuseki-docker/fuseki:/home/developer/data
-      - $HOME/data-docker/jena-fuseki-docker/workspace:/home/developer/workspace
+      #- $HOME/data-docker/jena-fuseki-docker/fuseki:/home/developer/fuseki
+      #- $HOME/data-docker/jena-fuseki-docker/workspace:/home/developer/workspace
       ## ==== Use current directory as root for mapping Volumes: ====
       ## (You need to manually create those child directory: ./data, ./workspace, and others)
-      #- ./data:/home/developer/data
-      #- ./workspace:/home/developer/workspace
+      - ./data:/home/developer/data
+      - ./workspace:/home/developer/workspace
       ## ==== App's additional mapping Volumes: ====
+      #- jena-fuseki-datbases:/home/developer/fuseki:rw
+      - ./databases:/home/developer/fuseki:rw
 
     ## -------------------------------
     ## -- Change to your specific port
     ## -------------------------------
-    # ports:
-    #   - "12345:12345"
+    ports:
+      - "13030:3030"
 
     ## -----------------------------
     ## -- Network setup if needed --
@@ -65,8 +72,8 @@ services:
     #  - dev_network
 
 #volumes:
-#    jena-fuseki-docker_volume:
-#        external: false
+#    jena-fuseki-datbases:
+    
 
 #networks:
 #  dev_network:
