@@ -53,8 +53,8 @@ services:
       #- $HOME/data-docker/jena-fuseki-docker/workspace:/home/developer/workspace
       ## ==== Use current directory as root for mapping Volumes: ====
       ## (You need to manually create those child directory: ./data, ./workspace, and others)
-      - ./data:/home/developer/data
-      - ./workspace:/home/developer/workspace
+      #- ./data:/home/developer/data
+      #- ./workspace:/home/developer/workspace
       ## ==== App's additional mapping Volumes: ====
       #- jena-fuseki-datbases:/home/developer/fuseki:rw
       - ./databases:/home/developer/fuseki:rw
