@@ -1,5 +1,3 @@
-# (Beta version - for developers only)
-
 # Apache Fuseki TDB (Tuple DB) + Java 11 OpenJDK with no root access 
 * A RDF Fuseki TDB w/ Java 11 base Container with `no root access` (except using `sudo ...` and you can remove it using `sudo apt-get remove sudo` to protect your Container). 
 ```
@@ -8,14 +6,12 @@ If [ you are looking for such a common requirement as a base Container ]:
 ```
 
 # Credits:
-* This project leverage many what Stain's stain/jena-docker GIT project.
-* It is just not practical to fork from stain/jena-docker since there are a few structure changes.
-* Though this project is not forked from stain/jena-docker, there are quite a few reuse from stain/jena-docker.
+* This project leveraged many what Stain's stain/jena-docker GIT project though it's not directly forked.
 
 # Components:
-* OpenJDK Java 11 base image
-* jena-fuseki
-* jena
+* OpenJDK Java 11 base image + Non-root User (/home/developer)
+* [Apache Jena](https://jena.apache.org/index.html) - Triple Store TDB/TDB2, SPARQL/Fuseki.
+* Maven + Gradle
 * No root setup: using /home/developer 
   * It has sudo for dev phase usage. You can "sudo apt-get remove sudo" to finalize the product image.
   * Note, you should consult Docker security experts in how to secure your Container for your production use!)
@@ -28,6 +24,14 @@ If [ you are looking for such a common requirement as a base Container ]:
 # Run (recommended for easy-start)
 ```
 ./run.sh
+```
+To use docker-compose, 
+```
+docker-compose up
+```
+To access Web UI:
+```
+http://0.0.0.0:13030/
 ```
 
 # Quick commands

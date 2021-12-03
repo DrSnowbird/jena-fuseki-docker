@@ -100,7 +100,10 @@ pull:
 	fi
 
 up:
-	docker-compose up -d
+	@if [ ! -s databases ]; then \
+		mkdir databases; \
+	fi
+	docker-compose up --remove-orphans
 
 down:
 	docker-compose down

@@ -56,7 +56,12 @@ services:
       #- ./data:/home/developer/data
       #- ./workspace:/home/developer/workspace
       ## ==== App's additional mapping Volumes: ====
+      ## --- (use volume way)
       #- jena-fuseki-datbases:/home/developer/fuseki:rw
+      ## --- (use PWD's ./databases)
+      # *****************************************************************************
+      # **** IMPORTANT: you need to manually pre-create the ./databases directory ***
+      # *****************************************************************************
       - ./databases:/home/developer/fuseki:rw
 
     ## -------------------------------
