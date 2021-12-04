@@ -3,7 +3,7 @@
 
 :susanGraph { 
     :Susan a ex:Person ;
-            ex:name \"Susan Johns\" ;
+            ex:name "Susan Johns" ;
             ex:homepage <http://www.susanjohns.org> ;
             ex:email <mailto:susan@susanjohns.org> ;
             ex:hasSkill ex:Marketing ,
