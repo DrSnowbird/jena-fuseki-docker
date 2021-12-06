@@ -1,0 +1,991 @@
+{
+	"info": {
+		"_postman_id": "1ea05312-bd44-4d9f-b05b-a144fbbc6860",
+		"name": "Fuseki-TDB2",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Fuseki-CRUD",
+			"item": [
+				{
+					"name": "OK-Fuseki-SPARQL-INSERT-Book-Graph",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/sparql-update"
+							},
+							{
+								"key": "Accept",
+								"value": "application/sparql-results+json"
+							},
+							{
+								"key": "Accept",
+								"value": "application/sparql-results+xml",
+								"disabled": true
+							},
+							{
+								"key": "Accept",
+								"value": "application/x-binary-rdf-results-table",
+								"disabled": true
+							},
+							{
+								"key": "Accept",
+								"value": "application/sparql-results+ttl",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "PREFIX dc: <http://purl.org/dc/elements/1.1/>\nPREFIX ns: <http://example.org/ns#>\nINSERT DATA {\n    GRAPH <http://example/bookStore> {\n        <http://example/book1> dc:title \"Fundamentals of Compiler Design\" .\n        <http://example/book1>  ns:price  42 .\n    }\n}"
+						},
+						"url": {
+							"raw": "http://0.0.0.0:13030/try-insert-delete/",
+							"protocol": "http",
+							"host": [
+								"0",
+								"0",
+								"0",
+								"0"
+							],
+							"port": "13030",
+							"path": [
+								"try-insert-delete",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "OK-Fuseki-SPARQL-QUERY-Book-Graph",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/sparql-query"
+							},
+							{
+								"key": "Accept",
+								"value": "application/sparql-results+json"
+							},
+							{
+								"key": "Accept",
+								"value": "application/sparql-results+xml",
+								"disabled": true
+							},
+							{
+								"key": "Accept",
+								"value": "application/x-binary-rdf-results-table",
+								"disabled": true
+							},
+							{
+								"key": "Accept",
+								"value": "application/sparql-results+ttl",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "PREFIX foaf: <http://xmlns.com/foaf/0.1/>\n\nSELECT ?s ?p ?o \nWHERE {\n  GRAPH <http://example/bookStore> {\n  \t?s ?p ?o \n  }\n}\n#LIMIT 1000"
+						},
+						"url": {
+							"raw": "http://0.0.0.0:13030/try-insert-delete/",
+							"protocol": "http",
+							"host": [
+								"0",
+								"0",
+								"0",
+								"0"
+							],
+							"port": "13030",
+							"path": [
+								"try-insert-delete",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "OK-Fuseki-SPARQL-DELETE-Book-Graph",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/sparql-update"
+							},
+							{
+								"key": "Accept",
+								"value": "application/sparql-results+json"
+							},
+							{
+								"key": "Accept",
+								"value": "application/sparql-results+xml",
+								"disabled": true
+							},
+							{
+								"key": "Accept",
+								"value": "application/x-binary-rdf-results-table",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "# Remove all triples from the graph named with the IRI denoted by IRIref.\nDELETE { \n    GRAPH <http://example/bookStore> { \n        ?s ?p ?o \n    }\n}\nWHERE {\n    GRAPH <http://example/bookStore> { \n        ?s ?p ?o\n    } \n}\n"
+						},
+						"url": {
+							"raw": "http://0.0.0.0:13030/try-insert-delete/",
+							"protocol": "http",
+							"host": [
+								"0",
+								"0",
+								"0",
+								"0"
+							],
+							"port": "13030",
+							"path": [
+								"try-insert-delete",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "OK-Fuseki-SPARQL-CLEAR-Book-Graph",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/sparql-update"
+							},
+							{
+								"key": "Accept",
+								"value": "application/sparql-results+json"
+							},
+							{
+								"key": "Accept",
+								"value": "application/sparql-results+xml",
+								"disabled": true
+							},
+							{
+								"key": "Accept",
+								"value": "application/x-binary-rdf-results-table",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "# Remove all triples from a specified graph.\nCLEAR GRAPH <http://example/bookStore>"
+						},
+						"url": {
+							"raw": "http://0.0.0.0:13030/try-insert-delete/",
+							"protocol": "http",
+							"host": [
+								"0",
+								"0",
+								"0",
+								"0"
+							],
+							"port": "13030",
+							"path": [
+								"try-insert-delete",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "OK-Fuseki-SPARQL-DROP-Book-Graph",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/sparql-update"
+							},
+							{
+								"key": "Accept",
+								"value": "application/sparql-results+json"
+							},
+							{
+								"key": "Accept",
+								"value": "application/sparql-results+xml",
+								"disabled": true
+							},
+							{
+								"key": "Accept",
+								"value": "application/x-binary-rdf-results-table",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "DROP GRAPH <http://example/bookStore>"
+						},
+						"url": {
+							"raw": "http://0.0.0.0:13030/try-insert-delete/",
+							"protocol": "http",
+							"host": [
+								"0",
+								"0",
+								"0",
+								"0"
+							],
+							"port": "13030",
+							"path": [
+								"try-insert-delete",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "OK-Fuseki-SPARQL-Update(DELETE+INSERT)-Book1-Graph",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/sparql-update"
+							},
+							{
+								"key": "Accept",
+								"value": "application/sparql-results+json"
+							},
+							{
+								"key": "Accept",
+								"value": "application/sparql-results+xml",
+								"disabled": true
+							},
+							{
+								"key": "Accept",
+								"value": "application/x-binary-rdf-results-table",
+								"disabled": true
+							},
+							{
+								"key": "Accept",
+								"value": "application/sparql-results+ttl",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "PREFIX dc: <http://purl.org/dc/elements/1.1/>\nPREFIX ns: <http://example.org/ns#>\nPREFIX dc: <http://purl.org/dc/elements/1.1/>\n\nDELETE DATA\n{ GRAPH <http://example/bookStore> { <http://example/book1>  dc:title  \"Fundamentals of Compiler Desing\" } } ;\n\nPREFIX dc: <http://purl.org/dc/elements/1.1/>\nINSERT DATA\n{ GRAPH <http://example/bookStore> { <http://example/book1>  dc:title  \"Fundamentals of Compiler Design, 2nd Edition\" } }"
+						},
+						"url": {
+							"raw": "http://0.0.0.0:13030/try-insert-delete/",
+							"protocol": "http",
+							"host": [
+								"0",
+								"0",
+								"0",
+								"0"
+							],
+							"port": "13030",
+							"path": [
+								"try-insert-delete",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "OK-Fuseki-SPARQL-INSERT-add-to-DEFAULT-Graph",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "text/turtle"
+							},
+							{
+								"key": "Accept",
+								"value": "application/sparql-results+json"
+							},
+							{
+								"key": "Accept",
+								"value": "application/sparql-results+xml",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "# Default graph\n@prefix foaf:  <http://xmlns.com/foaf/0.1/> .\n\n<http://example/william> a foaf:Person .\n<http://example/william> foaf:givenName \"William\" .\n<http://example/william> foaf:mbox  <mailto:bill@example> ."
+						},
+						"url": {
+							"raw": "http://0.0.0.0:13030/try-insert-delete/",
+							"protocol": "http",
+							"host": [
+								"0",
+								"0",
+								"0",
+								"0"
+							],
+							"port": "13030",
+							"path": [
+								"try-insert-delete",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "OK-Fuseki-SPARQL-DELETE-DEFAULT-Graph",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/sparql-update"
+							},
+							{
+								"key": "Accept",
+								"value": "application/sparql-results+json"
+							},
+							{
+								"key": "Accept",
+								"value": "application/sparql-results+xml",
+								"disabled": true
+							},
+							{
+								"key": "Accept",
+								"value": "application/x-binary-rdf-results-table",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "DELETE { \n    ?s ?p ?o .\n}\nWHERE {\n    ?s ?p ?o .\n}\n"
+						},
+						"url": {
+							"raw": "http://0.0.0.0:13030/try-insert-delete",
+							"protocol": "http",
+							"host": [
+								"0",
+								"0",
+								"0",
+								"0"
+							],
+							"port": "13030",
+							"path": [
+								"try-insert-delete"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "OK-Fuseki-SPARQL-ADD-COPY-from-DEFAULT-to-Named-Graph",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/sparql-update"
+							},
+							{
+								"key": "Accept",
+								"value": "application/sparql-results+json"
+							},
+							{
+								"key": "Accept",
+								"value": "application/sparql-results+xml",
+								"disabled": true
+							},
+							{
+								"key": "Accept",
+								"value": "application/x-binary-rdf-results-table",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "ADD DEFAULT TO <http://example.org/named>"
+						},
+						"url": {
+							"raw": "http://0.0.0.0:13030/try-insert-delete",
+							"protocol": "http",
+							"host": [
+								"0",
+								"0",
+								"0",
+								"0"
+							],
+							"port": "13030",
+							"path": [
+								"try-insert-delete"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "OK-Fuseki-Upload-TTL-Monica-Graph",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/trig"
+					},
+					{
+						"key": "Accept",
+						"value": "application/sparql-results+json"
+					},
+					{
+						"key": "Accept",
+						"value": "application/sparql-results+xml",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "@prefix ex: <http://www.example.org/vocabulary#> .\n@prefix : <http://www.example.org/exampleDocument#> .\n\n:monicaGraph { \n    :Monica a ex:Person ;\n            ex:name \"Monica Murphy\" ;\n            ex:homepage <http://www.monicamurphy.org> ;\n            ex:email <mailto:monica@monicamurphy.org> ;\n            ex:hasSkill ex:Management ,\n            ex:Programming . \n}"
+				},
+				"url": {
+					"raw": "http://0.0.0.0:13030/rdf001/",
+					"protocol": "http",
+					"host": [
+						"0",
+						"0",
+						"0",
+						"0"
+					],
+					"port": "13030",
+					"path": [
+						"rdf001",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "OK-Fuseki-Upload-TTL-Susan-Graph-File",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/trig"
+					},
+					{
+						"key": "Accept",
+						"value": "application/sparql-results+json"
+					},
+					{
+						"key": "Accept",
+						"value": "application/sparql-results+xml",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "file",
+					"file": {
+						"src": "/mnt/user1/DATA/git-public/RDF/jena-fuseki-docker/sparql-examples/UPLOAD-RDF/SusanJohns-graph.ttl.trig"
+					}
+				},
+				"url": {
+					"raw": "http://0.0.0.0:13030/rdf001/",
+					"protocol": "http",
+					"host": [
+						"0",
+						"0",
+						"0",
+						"0"
+					],
+					"port": "13030",
+					"path": [
+						"rdf001",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "OK-Fuseki-Upload-TTL-Sutdent-Graph",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/trig"
+					},
+					{
+						"key": "Accept",
+						"value": "application/sparql-results+json"
+					},
+					{
+						"key": "Accept",
+						"value": "application/sparql-results+xml",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "@prefix ex: <http://www.example.org/vocabulary#> .\n@prefix : <http://www.example.org/exampleDocument#> .\n\n:monicaGraph { \n    :Monica a ex:Person ;\n            ex:name \"Monica Murphy\" ;\n            ex:homepage <http://www.monicamurphy.org> ;\n            ex:email <mailto:monica@monicamurphy.org> ;\n            ex:hasSkill ex:Management ,\n            ex:Programming . \n}"
+				},
+				"url": {
+					"raw": "http://0.0.0.0:13030/rdf001/",
+					"protocol": "http",
+					"host": [
+						"0",
+						"0",
+						"0",
+						"0"
+					],
+					"port": "13030",
+					"path": [
+						"rdf001",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "OK-Fuseki-Upload-TTL-Spiderman-Graph",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/trig"
+					},
+					{
+						"key": "Accept",
+						"value": "application/sparql-results+json"
+					},
+					{
+						"key": "Accept",
+						"value": "application/sparql-results+xml",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "@base <http://example.org/> .\n@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .\n@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .\n@prefix foaf: <http://xmlns.com/foaf/0.1/> .\n@prefix rel: <http://www.perceive.net/schemas/relationship/> .\n\n@prefix spiderman_graph: <http://spiderman.tv/onotology> .\n\nspiderman_graph: {\n    <#green-goblin>\n        rel:enemyOf <#spiderman> ;\n        a foaf:Person ;    # in the context of the Marvel universe\n        foaf:name \"Green Goblin\" .\n\n    <#spiderman>\n        rel:enemyOf <#green-goblin> ;\n        a foaf:Person ;\n        foaf:name \"Spiderman\", \"Peter Parker\" .\n}"
+				},
+				"url": {
+					"raw": "http://0.0.0.0:13030/rdf001/",
+					"protocol": "http",
+					"host": [
+						"0",
+						"0",
+						"0",
+						"0"
+					],
+					"port": "13030",
+					"path": [
+						"rdf001",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "OK-Fuseki-Upload-TTL-Person-and-Car-Graph-from-File",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/trig"
+					},
+					{
+						"key": "Accept",
+						"value": "application/sparql-results+json"
+					},
+					{
+						"key": "Accept",
+						"value": "application/sparql-results+xml",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "file",
+					"file": {
+						"src": "/mnt/user1/DATA/git-public/RDF/jena-fuseki-docker/sparql-examples/UPLOAD-RDF/persons-and-car-Graph.ttl.trig"
+					}
+				},
+				"url": {
+					"raw": "http://0.0.0.0:13030/rdf001/",
+					"protocol": "http",
+					"host": [
+						"0",
+						"0",
+						"0",
+						"0"
+					],
+					"port": "13030",
+					"path": [
+						"rdf001",
+						""
+					],
+					"query": [
+						{
+							"key": "graph-uri",
+							"value": "graph-uri=urn:graph:update:test:put",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "OK-Fuseki-SPARQL-Query-Monica-Graph",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/sparql-query"
+					},
+					{
+						"key": "Accept",
+						"value": "application/sparql-results+json"
+					},
+					{
+						"key": "Accept",
+						"value": "application/sparql-results+xml",
+						"disabled": true
+					},
+					{
+						"key": "Accept",
+						"value": "application/x-binary-rdf-results-table",
+						"disabled": true
+					},
+					{
+						"key": "Accept",
+						"value": "application/sparql-results+ttl",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "PREFIX ex: <http://www.example.org/vocabulary#>\nPREFIX : <http://www.example.org/exampleDocument#> \n\nSELECT ?s ?p ?o \nWHERE \n{\n  GRAPH :monicaGraph\n  {\n    ?s ?p ?o\n  }\n}"
+				},
+				"url": {
+					"raw": "http://0.0.0.0:13030/rdf001/",
+					"protocol": "http",
+					"host": [
+						"0",
+						"0",
+						"0",
+						"0"
+					],
+					"port": "13030",
+					"path": [
+						"rdf001",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "OK-Fuseki-SPARQL-Query-Susan-Graph",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/sparql-query"
+					},
+					{
+						"key": "Accept",
+						"value": "application/sparql-results+json"
+					},
+					{
+						"key": "Accept",
+						"value": "application/sparql-results+xml",
+						"disabled": true
+					},
+					{
+						"key": "Accept",
+						"value": "application/x-binary-rdf-results-table",
+						"disabled": true
+					},
+					{
+						"key": "Accept",
+						"value": "application/sparql-results+ttl",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "PREFIX ex: <http://www.example.org/vocabulary#>\nPREFIX : <http://www.example.org/exampleDocument#> \nSELECT ?s ?p ?o \nWHERE {\n  GRAPH :susanGraph {\n  \t?s ?p ?o \n  }\n}\nLIMIT 1000"
+				},
+				"url": {
+					"raw": "http://0.0.0.0:13030/rdf001/",
+					"protocol": "http",
+					"host": [
+						"0",
+						"0",
+						"0",
+						"0"
+					],
+					"port": "13030",
+					"path": [
+						"rdf001",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "OK-Fuseki-SPARQL-Query-Student-graph",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/sparql-query"
+					},
+					{
+						"key": "Accept",
+						"value": "application/sparql-results+json",
+						"disabled": true
+					},
+					{
+						"key": "Accept",
+						"value": "application/sparql-results+xml",
+						"disabled": true
+					},
+					{
+						"key": "Accept",
+						"value": "text/turtle; charset=utf-8"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "PREFIX ex: <http://www.example.org/vocabulary#>\nPREFIX : <http://www.example.org/exampleDocument#> \n\nSELECT ?s ?p ?o \nWHERE \n{\n  GRAPH <http://dig.isi.edu/> \n  {\n    ?s ?p ?o\n  }\n}"
+				},
+				"url": {
+					"raw": "http://0.0.0.0:13030/rdf002/",
+					"protocol": "http",
+					"host": [
+						"0",
+						"0",
+						"0",
+						"0"
+					],
+					"port": "13030",
+					"path": [
+						"rdf002",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "OK-Fuseki-SPARQL-Query-John-graph",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/sparql-query"
+					},
+					{
+						"key": "Accept",
+						"value": "application/sparql-results+json"
+					},
+					{
+						"key": "Accept",
+						"value": "application/sparql-results+xml",
+						"disabled": true
+					},
+					{
+						"key": "Accept",
+						"value": "application/x-binary-rdf-results-table",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "PREFIX ex: <http://www.example.org/vocabulary#>\nPREFIX : <http://www.example.org/exampleDocument#> \n\nSELECT ?s ?p ?o \nWHERE \n{\n  GRAPH :johnGraph\n  {\n    ?s ?p ?o\n  }\n}"
+				},
+				"url": {
+					"raw": "http://0.0.0.0:13030/rdf002/query",
+					"protocol": "http",
+					"host": [
+						"0",
+						"0",
+						"0",
+						"0"
+					],
+					"port": "13030",
+					"path": [
+						"rdf002",
+						"query"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "OK-Fuseki-SPARQL-POST-Query-List-Graphs",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/sparql-query"
+					},
+					{
+						"key": "Accept",
+						"value": "application/sparql-results+json"
+					},
+					{
+						"key": "Accept",
+						"value": "application/sparql-results+xml",
+						"disabled": true
+					},
+					{
+						"key": "Accept",
+						"value": "application/x-binary-rdf-results-table",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "PREFIX ex: <http://www.example.org/vocabulary#>\nPREFIX : <http://www.example.org/exampleDocument#> \n\nSELECT ?s ?p ?o \nWHERE \n{\n  GRAPH :johnGraph\n  {\n    ?s ?p ?o\n  }\n}"
+				},
+				"url": {
+					"raw": "http://0.0.0.0:13030/rdf002/query",
+					"protocol": "http",
+					"host": [
+						"0",
+						"0",
+						"0",
+						"0"
+					],
+					"port": "13030",
+					"path": [
+						"rdf002",
+						"query"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "OK-Fuseki-SPARQL-GET-Query-List-Graphs",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/sparql-query"
+					},
+					{
+						"key": "Accept",
+						"value": "application/sparql-results+json"
+					},
+					{
+						"key": "Accept",
+						"value": "application/sparql-results+xml",
+						"disabled": true
+					},
+					{
+						"key": "Accept",
+						"value": "application/sparql-results+ttl",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "select ?g (count(*) as ?count) {\n    graph ?g {\n        ?s ?p ?o\n    }\n} \ngroup by ?g\n"
+				},
+				"url": {
+					"raw": "http://0.0.0.0:13030/rdf001/sparql",
+					"protocol": "http",
+					"host": [
+						"0",
+						"0",
+						"0",
+						"0"
+					],
+					"port": "13030",
+					"path": [
+						"rdf001",
+						"sparql"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "OK-Fuseki-SPARQL-Query-ALL",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/sparql-query"
+					},
+					{
+						"key": "Accept",
+						"value": "application/sparql-results+json",
+						"disabled": true
+					},
+					{
+						"key": "Accept",
+						"value": "application/sparql-results+xml",
+						"disabled": true
+					},
+					{
+						"key": "Accept",
+						"value": "application/sparql-results+ttl",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "SELECT ?s ?p ?o\nWHERE \n{\n    {\n        GRAPH ?g \n        {\n            ?s ?p ?o\n        }\n    } \n    UNION \n    {\n        ?s ?p ?o \n    }\n}\nLIMIT 100"
+				},
+				"url": {
+					"raw": "http://0.0.0.0:13030/rdf001/",
+					"protocol": "http",
+					"host": [
+						"0",
+						"0",
+						"0",
+						"0"
+					],
+					"port": "13030",
+					"path": [
+						"rdf001",
+						""
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
