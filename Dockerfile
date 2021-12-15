@@ -13,7 +13,7 @@ WORKDIR ${HOME:-/home/developer}
 #########################
 #### ---- App:  ---- ####
 #########################
-ENV FUSEKI_VERSION=${FUSEKI_VERSION:-4.2.0}
+ENV FUSEKI_VERSION=${FUSEKI_VERSION:-4.3.1}
 # No need for https due to sha512 checksums below
 ENV ASF_MIRROR=${ASF_MIRROR:-http://www.apache.org/dyn/mirrors/mirrors.cgi?action=download&filename=}
 #### ---- Download: setup ---- ####
