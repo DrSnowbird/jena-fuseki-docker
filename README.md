@@ -5,6 +5,12 @@ If [ you are looking for such a common requirement as a base Container ]:
    Then [ this one may be for you ]
 ```
 
+# (`NEW`) CVE Log4J Vulability
+* Dockerfile added built-in system environment variable
+```
+ENV LOG4J_FORMAT_MSG_NO_LOOKUPS=true
+```
+
 # Credits:
 * This project leveraged many what Stain's stain/jena-docker GIT project though it's not directly forked.
 
@@ -61,4 +67,10 @@ http://0.0.0.0:13030/
 
 If you wish to share a TDB dataset between multiple applications please use our Fuseki component which provides a SPARQL server that can use TDB for persistent storage and provides the SPARQL protocols for query, update and REST update over HTTP.
 
-
+# HTTP Contents Negotiation:
+HTTP RDF Content negotiation should work from "http://schema.org/" and include all supported formats
+* text/turtle (Turtle)
+* application/n-quads (Quad)
+* application/n-triples (Ntriples)
+* application/ld+json (JSON-LD)
+* application/xhtml+xml (RDFa)

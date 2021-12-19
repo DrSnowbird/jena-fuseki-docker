@@ -29,7 +29,7 @@ ENV FUSEKI_HOME=${HOME}/jena-fuseki
 
 ## -- Download -- #
 RUN echo ">>> ${DOWNLAD_URL}/${TGZ_OBJECT}" && curl -sS -o fuseki.tar.gz -L  ${DOWNLAD_URL}/${TGZ_OBJECT} && \
-    (ls -al fuseki.tar.gz && tar -xvf fuseki.tar.gz) && \
+    tar -xvf fuseki.tar.gz && \
     mv apache-jena-fuseki* ${FUSEKI_HOME} && \
     chown -R $USER:$USER ${FUSEKI_HOME} && \
     rm fuseki.tar.gz* && \
@@ -50,6 +50,9 @@ COPY --chown=${USER}:${USER} app/load.sh ${FUSEKI_HOME}/
 COPY --chown=${USER}:${USER} app/tdbloader ${FUSEKI_HOME}/
 COPY --chown=${USER}:${USER} app/tdbloader2 ${FUSEKI_HOME}/
 RUN sudo chmod +x /docker-entrypoint.sh ${FUSEKI_HOME}/load.sh ${FUSEKI_HOME}/tdbloader ${FUSEKI_HOME}/tdbloader2
+
+## -- Disabling JNDI functionality -- ##
+ENV OG4J_FORMAT_MSG_NO_LOOKUPS=true
 
 #VOLUME /staging
 

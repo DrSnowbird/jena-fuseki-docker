@@ -17,6 +17,8 @@ services:
     env_file:
       - ./.env
     environment:
+      # CVE Disabling JNDI functionality
+      - OG4J_FORMAT_MSG_NO_LOOKUPS=true
       - CONTAINER_NAME=jena-fuseki-docker
       - USER_ID=${USER_ID:-1000}
       - GROUP_ID=${GROUP_ID:-1000}

@@ -111,11 +111,11 @@ echo $@
 
 ## ------------------------------------------------------------------------
 ## -- Container 'hostname' use: 
-## -- Default= 1 (use HOST_IP)
+## -- Default= 2 (use HOST_NAME)
 ## -- 1: HOST_IP
 ## -- 2: HOST_NAME
 ## ------------------------------------------------------------------------
-HOST_USE_IP_OR_NAME=${HOST_USE_IP_OR_NAME:-1}
+HOST_USE_IP_OR_NAME=${HOST_USE_IP_OR_NAME:-2}
 
 ########################################
 #### ---- NVIDIA GPU Checking: ---- ####
@@ -178,8 +178,7 @@ USER_OPTIONS_NEEDED=1
 ##   Add any additional options here
 ## ------------------------------------------------------------------------
 #MORE_OPTIONS="--privileged=true"
-#MORE_OPTIONS="--ipc=host --shm-size 4g"
-MORE_OPTIONS="--ipc=host"
+MORE_OPTIONS=
 
 ## ------------------------------------------------------------------------
 ## Multi-media optional values:
@@ -258,6 +257,28 @@ function get_HOST_IP() {
 get_HOST_IP
 HOST_IP=${HOST_IP:-127.0.0.1}
 HOST_NAME=${HOST_NAME:-localhost}
+
+##################################################
+## ---- Setup accessing HOST's /etc/hosts: ---- ##
+##################################################
+IS_USE_HOST_OPTIONS=1
+function container_host_options() {
+    ## **************** WARNING: *********************
+    ## **************** WARNING: *********************
+    ## **************** WARNING: *********************
+    #  => this might open up more attack surface since
+    #   /etc/hosts has other nodes IP/name information
+    # ------------------------------------------------
+    if [ ${IS_USE_HOST_OPTIONS} -gt 0 ]; then
+        if [ ${HOST_USE_IP_OR_NAME} -eq 2 ]; then
+            HOSTS_OPTIONS="-h ${HOST_NAME} -v /etc/hosts:/etc/hosts "
+        else
+            # default use HOST_IP
+            HOSTS_OPTIONS="-h ${HOST_IP} -v /etc/hosts:/etc/hosts "
+        fi
+    fi
+}
+container_host_options
 
 ###################################################
 #### **** Container package information ****
@@ -395,8 +416,11 @@ function checkHostVolumePath() {
         echo "--- checkHostVolumePath: ${_left}: Not existing!"
         mkdir -p ${_left}
     fi
-    sudo chown -R ${USER_ID}:${USER_ID} ${_left}
-    ls -al ${_left}
+    _SYS_PATHS="/dev /var /etc"
+    if [[ $_SYS_PATHS != *"${_left}"* ]]; then
+        sudo chown -R ${USER_ID}:${USER_ID} ${_left}
+        ls -al ${_left}
+    fi
 }
 
 function generateVolumeMapping() {
@@ -803,23 +827,6 @@ function setupCorporateCertificates() {
     echo "CERTIFICATE_OPTIONS=${CERTIFICATE_OPTIONS}"
 }
 setupCorporateCertificates
-
-
-##################################################
-## ---- Setup accessing HOST's /etc/hosts: ---- ##
-##################################################
-## **************** WARNING: *********************
-## **************** WARNING: *********************
-## **************** WARNING: *********************
-#  => this might open up more attack surface since
-#   /etc/hosts has other nodes IP/name information
-# ------------------------------------------------
-if [ ${HOST_USE_IP_OR_NAME} -eq 2 ]; then
-    HOSTS_OPTIONS="-h ${HOST_NAME} -v /etc/hosts:/etc/hosts "
-else
-    # default use HOST_IP
-    HOSTS_OPTIONS="-h ${HOST_IP} -v /etc/hosts:/etc/hosts "
-fi
 
 ##################################################
 ##################################################
