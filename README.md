@@ -48,10 +48,12 @@ http://0.0.0.0:13030/
 * stop.sh - stop the container
 
 # Issues
-* Most likely, the root cause is the mis-alignment of owner between host's 'fuseki' (root or <you>) and the folder mapping to /home/developer/fuseki.
-* Makesure you first 'mkdir ./databases' before you run 'docker-compose up'
+Often you might encounter error like no access permission.
+* Most likely, the root cause is the mis-alignment of ownerships between host's 'fuseki' (root or <you>) and the folder mapping to /home/developer/fuseki.
+* Makesure you first 'mkdir ./databases' with owner (1001:1001) before you run 'docker-compose up'
 
 # Resources:
+* [W3C SPARQL 1.1 Update - W3C Recommendation 21 March 2013](https://www.w3.org/TR/sparql11-update/)
 * [Apache Jena Home](https://jena.apache.org/index.html)
 * [Apache Jena TDB2 Command Line Tools](https://jena.apache.org/documentation/tdb2/tdb2_cmds.html)
 * [Apache Jena Ontology API](https://jena.apache.org/documentation/ontology/)
@@ -60,6 +62,11 @@ http://0.0.0.0:13030/
 * [SPARQL 1.1 Graph Store HTTP Protocol](https://www.w3.org/TR/sparql11-http-rdf-update/)
 * [HyperGraphQL Demo](https://www.hypergraphql.org/demo/)
 * [GraphQL Schema & Service Generator](https://github.com/genesis-upc/Ontology2GraphQL)
+* [DrSnowbird/rdf4j-docker, Apache Jena TDB/TDB2 RDF Server](https://github.com/DrSnowbird/rdf4j-docker)
+* [DrSnowbird/blazegraph-docker, high-performance RDF Server](https://github.com/DrSnowbird/blazegraph-docker)
+* [DrSnowbird/json2rdf-docker, converting JSON to RDF](https://github.com/DrSnowbird/json2rdf-docker)
+* [DrSnowbird/visualRDF, Visualize RDF Graph](https://github.com/DrSnowbird/visualRDF)
+* [DrSnowbird/SANSA-RDF](https://github.com/DrSnowbird/SANSA-RDF)
 
 # Things to know about TDB/TDB2
 * (per TDB document page - do not direct access TDB/TDB2 as multi-concurrent access/update since doing this might corrupt the database). Always use SPARQL HTTP REST API for Query and Update.
