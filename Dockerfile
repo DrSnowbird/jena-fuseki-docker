@@ -13,11 +13,11 @@ WORKDIR ${HOME:-/home/developer}
 #########################
 #### ---- App:  ---- ####
 #########################
-ENV FUSEKI_VERSION=${FUSEKI_VERSION:-4.3.1}
+ENV FUSEKI_VERSION=${FUSEKI_VERSION:-4.4.0}
 # No need for https due to sha512 checksums below
 ENV ASF_MIRROR=${ASF_MIRROR:-http://www.apache.org/dyn/mirrors/mirrors.cgi?action=download&filename=}
 #### ---- Download: setup ---- ####
-# https://dlcdn.apache.org/jena/binaries/apache-jena-fuseki-4.2.0.tar.gz
+# https://dlcdn.apache.org/jena/binaries/apache-jena-fuseki-4.4.0.tar.gz
 ENV DOWNLAD_URL=${DOWNLAD_URL:-https://dlcdn.apache.org/jena/binaries}
 ENV TGZ_OBJECT=apache-jena-fuseki-${FUSEKI_VERSION}.tar.gz
 
@@ -28,7 +28,9 @@ ENV FUSEKI_BASE=${HOME}/fuseki
 ENV FUSEKI_HOME=${HOME}/jena-fuseki
 
 ## -- Download -- #
-RUN echo ">>> ${DOWNLAD_URL}/${TGZ_OBJECT}" && curl -sS -o fuseki.tar.gz -L  ${DOWNLAD_URL}/${TGZ_OBJECT} && \
+#RUN echo ">>> ${DOWNLAD_URL}/${TGZ_OBJECT}" && curl -sS -o fuseki.tar.gz -L  ${DOWNLAD_URL}/${TGZ_OBJECT} && \
+
+RUN TAR_GZ=$(curl -s https://dlcdn.apache.org/jena/binaries/ | grep "tar.gz\"" | grep "apache-jena-fuseki" |cut -d'"' -f6); curl -sS -o fuseki.tar.gz -L https://dlcdn.apache.org/jena/binaries/$TAR_GZ && \
     tar -xvf fuseki.tar.gz && \
     mv apache-jena-fuseki* ${FUSEKI_HOME} && \
     chown -R $USER:$USER ${FUSEKI_HOME} && \
