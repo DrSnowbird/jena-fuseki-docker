@@ -1,0 +1,348 @@
+{
+	"info": {
+		"_postman_id": "e20d24a4-cfa5-4c3b-a87e-17b2c380d543",
+		"name": "D3fend",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "OK-Fuseki-Upload-TTL-D3fend-Graph-from-File",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/trig"
+					},
+					{
+						"key": "Accept",
+						"value": "application/sparql-results+json"
+					},
+					{
+						"key": "Accept",
+						"value": "application/sparql-results+xml",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "file",
+					"file": {
+						"src": "/mnt/user1/DATA/git-public/prototype/STRATAGEM/d3fend.trig"
+					}
+				},
+				"url": {
+					"raw": "http://0.0.0.0:13030/d3fend/",
+					"protocol": "http",
+					"host": [
+						"0",
+						"0",
+						"0",
+						"0"
+					],
+					"port": "13030",
+					"path": [
+						"d3fend",
+						""
+					],
+					"query": [
+						{
+							"key": "graph-uri",
+							"value": "graph-uri=urn:graph:update:test:put",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "OK-Fuseki-SPARQL-QUERY-Graph-D3fend",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/sparql-query"
+					},
+					{
+						"key": "Accept",
+						"value": "application/sparql-results+json"
+					},
+					{
+						"key": "Accept",
+						"value": "application/sparql-results+xml",
+						"disabled": true
+					},
+					{
+						"key": "Accept",
+						"value": "application/x-binary-rdf-results-table",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "PREFIX d3f: <http://d3fend.mitre.org/ontologies/d3fend.owl#>\n\nSELECT *\nFROM <http://d3fend.mitre.org/ontologies> \nWHERE {\n    ?s ?p ?o .\n}\nLIMIT 100"
+				},
+				"url": {
+					"raw": "http://0.0.0.0:13030/d3fend/",
+					"protocol": "http",
+					"host": [
+						"0",
+						"0",
+						"0",
+						"0"
+					],
+					"port": "13030",
+					"path": [
+						"d3fend",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "OK-Fuseki-SPARQL-DELETE-Graph-D3fend",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/sparql-update"
+					},
+					{
+						"key": "Accept",
+						"value": "application/sparql-results+json"
+					},
+					{
+						"key": "Accept",
+						"value": "application/sparql-results+xml",
+						"disabled": true
+					},
+					{
+						"key": "Accept",
+						"value": "application/x-binary-rdf-results-table",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "#REFIX d3f: <http://d3fend.mitre.org/ontologies/d3fend.owl#>\n\n# #Remove all triples from a specified graph.\n#CLEAR GRAPH IRIref \n#CLEAR GRAPH <http://d3fend.mitre.org/ontologies> ;\n# i.e.,\n#in principle has the same effect as:\n# Remove all triples from the graph named with the IRI denoted by IRIref.\nDELETE { \n    GRAPH <http://d3fend.mitre.org/ontologies> { \n        ?s ?p ?o \n    }\n}\nWHERE {\n    GRAPH <http://d3fend.mitre.org/ontologies> { \n        ?s ?p ?o\n    } \n}\n"
+				},
+				"url": {
+					"raw": "http://0.0.0.0:13030/d3fend",
+					"protocol": "http",
+					"host": [
+						"0",
+						"0",
+						"0",
+						"0"
+					],
+					"port": "13030",
+					"path": [
+						"d3fend"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "OK-Fuseki-SPARQL-CLEAR-Graph-D3fend",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/sparql-update"
+					},
+					{
+						"key": "Accept",
+						"value": "application/sparql-results+json",
+						"disabled": true
+					},
+					{
+						"key": "Accept",
+						"value": "application/sparql-results+xml",
+						"disabled": true
+					},
+					{
+						"key": "Accept",
+						"value": "application/x-binary-rdf-results-table",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "CLEAR GRAPH <http://d3fend.mitre.org/ontologies> ;"
+				},
+				"url": {
+					"raw": "http://0.0.0.0:13030/d3fend/",
+					"protocol": "http",
+					"host": [
+						"0",
+						"0",
+						"0",
+						"0"
+					],
+					"port": "13030",
+					"path": [
+						"d3fend",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "NG-BlazeGraph-SPARQL-Query-D3fend-graph",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/sparql-query"
+					},
+					{
+						"key": "Accept",
+						"value": "application/sparql-results+json"
+					},
+					{
+						"key": "Accept",
+						"value": "application/sparql-results+xml",
+						"disabled": true
+					},
+					{
+						"key": "Accept",
+						"value": "application/x-binary-rdf-results-table",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "PREFIX d3f: <http://d3fend.mitre.org/ontologies/d3fend.owl#>\n\nSELECT *\nFROM <http://d3fend.mitre.org/ontologies> \nWHERE {\n    ?s ?p ?o .\n}"
+				},
+				"url": {
+					"raw": "http://0.0.0.0:9999/bigdata/sparql?",
+					"protocol": "http",
+					"host": [
+						"0",
+						"0",
+						"0",
+						"0"
+					],
+					"port": "9999",
+					"path": [
+						"bigdata",
+						"sparql"
+					],
+					"query": [
+						{
+							"key": "",
+							"value": null
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://0.0.0.0:9999/bigdata/sparql?query=SELECT * WHERE {  ?s ?p ?o . }",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://0.0.0.0:9999/bigdata/sparql?query=SELECT * WHERE {  ?s ?p ?o . }",
+					"protocol": "http",
+					"host": [
+						"0",
+						"0",
+						"0",
+						"0"
+					],
+					"port": "9999",
+					"path": [
+						"bigdata",
+						"sparql"
+					],
+					"query": [
+						{
+							"key": "query",
+							"value": "SELECT * WHERE {  ?s ?p ?o . }"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Query-HTTP-GET-(JSON)-Named-Graph",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Cache-Control",
+						"value": "no-cache",
+						"disabled": true
+					},
+					{
+						"key": "Accept",
+						"value": "application/sparql-results+json"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/x-www-form-urlencoded",
+						"disabled": true
+					},
+					{
+						"key": "Connection",
+						"value": "keep-alive",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "query",
+							"value": "PREFIX+dig:+<http://dig.isi.edu/>\nPREFIX+:+<http://dig.isi.edu/>\n\nSELECT+*\nWHERE+{\n++++:event+?p+?o+.\n}",
+							"type": "text",
+							"disabled": true
+						}
+					]
+				},
+				"url": {
+					"raw": "http://0.0.0.0:9999/bigdata/sparql?query=SELECT%20%2A%20%0A%20%20%7B%0A%20%20%20%20GRAPH%20%3Chttp%3A%2F%2Fd3fend.mitre.org%2Fontologies%3E%20%0A%20%20%20%20%20%20%20%20%20%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20%3Fs%20%3Fp%20%3Fo%0A%20%20%20%20%20%20%20%20%20%20%7D%0A%20%20%7D",
+					"protocol": "http",
+					"host": [
+						"0",
+						"0",
+						"0",
+						"0"
+					],
+					"port": "9999",
+					"path": [
+						"bigdata",
+						"sparql"
+					],
+					"query": [
+						{
+							"key": "impact",
+							"value": "1",
+							"disabled": true
+						},
+						{
+							"key": "query",
+							"value": "SELECT%20%2A%20%0A%20%20%7B%0A%20%20%20%20GRAPH%20%3Chttp%3A%2F%2Fd3fend.mitre.org%2Fontologies%3E%20%0A%20%20%20%20%20%20%20%20%20%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20%3Fs%20%3Fp%20%3Fo%0A%20%20%20%20%20%20%20%20%20%20%7D%0A%20%20%7D"
+						}
+					]
+				},
+				"description": "RECAST-Reasoner 12781"
+			},
+			"response": []
+		}
+	]
+}

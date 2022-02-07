@@ -37,6 +37,11 @@ IS_TO_RUN_GPU=1
 RESTART_OPTION_VALUES=" no on-failure unless-stopped always "
 RESTART_OPTION=${RESTART_OPTION:-no}
 
+###################################################
+#### ---- Default variables setup here:   ---- ####
+###################################################
+SHM_SIZE="--shm-size=1g"
+
 ## ------------------------------------------------------------------------
 ## "RUN_OPTION" values: 
 ##    "-it" : (default) Interactive Container -
@@ -46,6 +51,11 @@ RESTART_OPTION=${RESTART_OPTION:-no}
 ##       ==> Or, your frequent needs of the container for DEV environment Use.
 ## ------------------------------------------------------------------------
 RUN_OPTION=${RUN_OPTION:-" -it "}
+
+# -- ref: using net=host will speed CPU performance ~ 20%
+# -- https://blog.gdeltproject.org/experiments-using-universal-sentence-encoder-embeddings-for-news-similarity/
+#NET_HOST="--net=host"
+NET_HOST=
 
 PARAMS=""
 while (( "$#" )); do
@@ -60,6 +70,10 @@ while (( "$#" )); do
       IS_TO_RUN_CPU=0
       IS_TO_RUN_GPU=1
       GPU_OPTION=" --gpus all "
+      shift
+      ;;
+    -n|--net-host)
+      NET_HOST="--net=host"
       shift
       ;;
     -d|--detach)
@@ -82,8 +96,20 @@ while (( "$#" )); do
           shift 2
       else
           echo "--- INFO: -r|--restart options: { no, on-failure, unless-stopped, always }"
-          echo "--- default to 'always' "
-          RESTART_OPTION=unless-stopped
+          echo "Error: Unsupported value: $2"
+          exit 1
+      fi
+      ;;
+    -m|--shm-size)
+      ## Valid "shm-size" values:
+      ##  { 1g, 2g, ... etc }
+      if [ "$2" != "" ]; then
+          SHM_SIZE=" --shm-size=$2 "
+          echo ">>> SHM_SIZE: ${SHM_SIZE}"
+          shift 2
+      else
+          echo "--- INFO: -m|--shm-size options: { 1g, 2g, ... etc }"
+          exit 1
       fi
       ;;
     -*|--*=) # unsupported flags
@@ -111,11 +137,13 @@ echo $@
 
 ## ------------------------------------------------------------------------
 ## -- Container 'hostname' use: 
-## -- Default= 2 (use HOST_NAME)
+## -- Default= 1 (use HOST_IP)
 ## -- 1: HOST_IP
 ## -- 2: HOST_NAME
 ## ------------------------------------------------------------------------
-HOST_USE_IP_OR_NAME=${HOST_USE_IP_OR_NAME:-2}
+HOST_USE_IP_OR_NAME=${HOST_USE_IP_OR_NAME:-1}
+
+MORE_OPTIONS=
 
 ########################################
 #### ---- NVIDIA GPU Checking: ---- ####
@@ -165,20 +193,18 @@ if [ ${IS_TO_RUN_GPU} -gt 0 ]; then
 fi
 echo "$@"
 
-## ------------------------------------------------------------------------
-## Change to one (1) if run.sh needs to use host's user/group to run the Container
-## Valid "USER_OPTIONS_NEEDED" values: 
-##    0: (default) Not using host's USER / GROUP ID
-##    1: Yes, using host's USER / GROUP ID for Container running.
-## ------------------------------------------------------------------------
-USER_OPTIONS_NEEDED=1
 
 ## ------------------------------------------------------------------------
 ## More optional values:
 ##   Add any additional options here
 ## ------------------------------------------------------------------------
 #MORE_OPTIONS="--privileged=true"
-MORE_OPTIONS=
+if [ "${SHM_SIZE}" != "" ]; then
+    MORE_OPTIONS+=" "${SHM_SIZE}
+fi
+if [ "${NET_HOST}" != "" ]; then
+    MORE_OPTIONS+=" "${NET_HOST}
+fi
 
 ## ------------------------------------------------------------------------
 ## Multi-media optional values:
@@ -415,6 +441,7 @@ function checkHostVolumePath() {
     if [ ! -s ${_left} ]; then 
         echo "--- checkHostVolumePath: ${_left}: Not existing!"
         mkdir -p ${_left}
+        sudo chown -R $USER:$USER ${_left}
     fi
     _SYS_PATHS="/dev /var /etc"
     if [[ $_SYS_PATHS != *"${_left}"* ]]; then
@@ -431,14 +458,14 @@ function generateVolumeMapping() {
     fi
     for vol in $VOLUMES_LIST; do
         echo
-        echo ">>>>>>>>> $vol"
+        echo -e "\n>>>>>>>>> $vol"
         hasColon=`echo $vol|grep ":"`
         ## -- allowing change local volume directories --
         if [ "$hasColon" != "" ]; then
             if [ "`echo $vol|grep 'volume-'`" != "" ]; then
                 cutomizedVolume $vol
             else
-                echo "************* hasColon=$hasColon"
+                debug "************* hasColon=$hasColon"
                 left=`echo $vol|cut -d':' -f1`
                 right=`echo $vol|cut -d':' -f2`
                 leftHasDot=`echo $left|grep "^\./"`
@@ -447,11 +474,11 @@ function generateVolumeMapping() {
                     debug "******** A. Left HAS Dot pattern: leftHasDot=$leftHasDot"
                     if [[ ${right} == "/"* ]]; then
                         ## -- pattern like: "./data:/containerPath/data"
-                        echo "******* A-1 -- pattern like ./data:/data --"
+                        debug "******* A-1 -- pattern like ./data:/data --"
                         VOLUME_MAP="${VOLUME_MAP} -v `pwd`/${left#./}:${right}"
                     else
                         ## -- pattern like: "./data:data"
-                        echo "******* A-2 -- pattern like ./data:data --"
+                        debug "******* A-2 -- pattern like ./data:data --"
                         VOLUME_MAP="${VOLUME_MAP} -v `pwd`/${left#./}:${DOCKER_VOLUME_DIR}/${right}"
                     fi
                     checkHostVolumePath "`pwd`/${left}"
@@ -463,11 +490,11 @@ function generateVolumeMapping() {
                         debug "******* B-1 ## Has pattern like /data on the left "
                         if [[ ${right} == "/"* ]]; then
                             ## -- pattern like: "/data:/containerPath/data"
-                            echo "****** B-1-a pattern like /data:/containerPath/data --"
+                            debug "****** B-1-a pattern like /data:/containerPath/data --"
                             VOLUME_MAP="${VOLUME_MAP} -v ${left}:${right}"
                         else
                             ## -- pattern like: "/data:data"
-                            echo "----- B-1-b pattern like /data:data --"
+                            debug "----- B-1-b pattern like /data:data --"
                             VOLUME_MAP="${VOLUME_MAP} -v ${left}:${DOCKER_VOLUME_DIR}/${right}"
                         fi
                         checkHostVolumePath "${left}"
@@ -476,7 +503,7 @@ function generateVolumeMapping() {
                         rightHasAbsPath=`echo $right|grep "^/.*"`
                         debug ">>>>>>>>>>>>> rightHasAbsPath=$rightHasAbsPath"
                         if [[ ${right} == "/"* ]]; then
-                            echo "****** B-2-a pattern like: data:/containerPath/data"
+                            debug "****** B-2-a pattern like: data:/containerPath/data"
                             debug "-- pattern like ./data:/data --"
                             VOLUME_MAP="${VOLUME_MAP} -v ${LOCAL_VOLUME_DIR}/${left}:${right}"
                         else
@@ -490,13 +517,22 @@ function generateVolumeMapping() {
                 fi
             fi
         else
-            ## -- pattern like: "data"
-            debug "-- default sub-directory (without prefix absolute path) --"
-            VOLUME_MAP="${VOLUME_MAP} -v ${LOCAL_VOLUME_DIR}/$vol:${DOCKER_VOLUME_DIR}/$vol"
-            checkHostVolumePath "${LOCAL_VOLUME_DIR}/$vol"
-            if [ $DEBUG -gt 0 ]; then ls -al ${LOCAL_VOLUME_DIR}/$vol; fi
+            volHasDot=`echo $vol|grep "^\./"`
+            if [ "$volHasDot" != "" ]; then
+                ## has "./data" alone 
+                debug "******** B. Left HAS Dot pattern: leftHasDot=$volHasDot"
+                debug "******* A-2 -- pattern like ./data:data --"
+                VOLUME_MAP="${VOLUME_MAP} -v `pwd`/${vol#./}:${DOCKER_VOLUME_DIR}/${vol#./}"
+                checkHostVolumePath "`pwd`/${vol#./}"
+            else
+                ## -- pattern like: "data"
+                debug "-- default sub-directory (without prefix absolute path) --"
+                VOLUME_MAP="${VOLUME_MAP} -v ${LOCAL_VOLUME_DIR}/$vol:${DOCKER_VOLUME_DIR}/$vol"
+                checkHostVolumePath "${LOCAL_VOLUME_DIR}/$vol"
+                if [ $DEBUG -gt 0 ]; then ls -al ${LOCAL_VOLUME_DIR}/$vol; fi
+            fi
         fi       
-        echo ">>> expanded VOLUME_MAP: ${VOLUME_MAP}"
+        echo -e "\n >>> expanded VOLUME_MAP: ${VOLUME_MAP}"
     done
 }
 #### ---- Generate Volumes Mapping ----
@@ -545,10 +581,18 @@ function generateEnvVars2() {
         value_trim="`echo $value | sed 's/^[[:space:]]*//'`"
         echo "$key=${value_trim}" 
         ENV_VARS="${ENV_VARS} -e \"${key}=${value_trim}\""
+#        multi_words=`echo "$key"|grep APP_RUN_CMD`
+#        if [ "$multi_words" != "" ]; then
+#            ENV_VARS=$ENV_VARS" -e \"$key=$value_trim\""
+#            ENV_APP_RUN_CMD=" -e \"$key=$value_trim\""
+#        else
+#            ENV_VARS=$ENV_VARS" -e "$key="$value_trim"
+#        fi
     done
 }
-#generateEnvVars2
-#echo ">> ENV_VARS=$ENV_VARS"
+generateEnvVars2
+echo ">> ENV_VARS=$ENV_VARS"
+echo ">> ENV_APP_RUN_CMD=$ENV_APP_RUN_CMD"
 
 function generateEnvVars_v2() {
     while read line; do
@@ -560,8 +604,8 @@ function generateEnvVars_v2() {
     done < <(grep -E "^[[:blank:]]*$1.+[[:blank:]]*=[[:blank:]]*.+[[:blank:]]*" ${DOCKER_ENV_FILE} | grep -v "^#")
     echo "ENV_VARS=$ENV_VARS"
 }
-generateEnvVars_v2
-echo ">> ENV_VARS=$ENV_VARS"
+#generateEnvVars_v2
+#echo ">> ENV_VARS=$ENV_VARS"
 
 function generateEnvVars() {
     if [ "${1}" != "" ]; then
@@ -828,35 +872,41 @@ function setupCorporateCertificates() {
 }
 setupCorporateCertificates
 
+
+##################################################
+## ---- Setup accessing HOST's /etc/hosts: ---- ##
+##################################################
+## **************** WARNING: *********************
+## **************** WARNING: *********************
+## **************** WARNING: *********************
+#  => this might open up more attack surface since
+#   /etc/hosts has other nodes IP/name information
+# ------------------------------------------------
+if [ ${HOST_USE_IP_OR_NAME} -eq 2 ]; then
+    HOSTS_OPTIONS="-h ${HOST_NAME} -v /etc/hosts:/etc/hosts "
+else
+    # default use HOST_IP
+    HOSTS_OPTIONS="-h ${HOST_IP} -v /etc/hosts:/etc/hosts "
+fi
+
 ##################################################
 ##################################################
 ## ----------------- main --------------------- ##
 ##################################################
 ##################################################
+echo ">>> (final) ENV_VARS=${ENV_VARS}"
 echo ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
 echo -e ">>> (final) ENV_VARS=${ENV_VARS}"
 
-set -x
-
 MORE_OPTIONS="${MORE_OPTIONS} ${HOSTS_OPTIONS} "
 
+set -x
 case "${BUILD_TYPE}" in
     0)
         #### 0: (default) has neither X11 nor VNC/noVNC container build image type
         #### ---- for headless-based / GUI-less ---- ####
-        docker run \
-            --name=${instanceName} \
-            --restart=${RESTART_OPTION} \
-            ${GPU_OPTION} \
-            ${REMOVE_OPTION} ${RUN_OPTION} ${MORE_OPTIONS} ${CERTIFICATE_OPTIONS} \
-            ${privilegedString} \
-            ${USER_OPTIONS} \
-            ${ENV_VARS} \
-            ${VOLUME_MAP} \
-            ${PORT_MAP} \
-            ${imageTag} \
-            $@
-       ;;
+        bash -c "docker run --name=${instanceName} --restart=${RESTART_OPTION} ${GPU_OPTION} ${REMOVE_OPTION} ${RUN_OPTION} ${HOSTS_OPTIONS} ${MISC_OPTIONS} ${MORE_OPTIONS} ${CERTIFICATE_OPTIONS} ${privilegedString} ${USER_OPTIONS} ${ENV_VARS} ${VOLUME_MAP} ${PORT_MAP} ${imageTag}" $@
+        ;;
     1)
         #### 1: X11/Desktip container build image type
         #### ---- for X11-based ---- #### 
@@ -866,20 +916,7 @@ case "${BUILD_TYPE}" in
         #X11_OPTION="-e DISPLAY=$DISPLAY -v /dev/shm:/dev/shm -v /tmp/.X11-unix:/tmp/.X11-unix -e DBUS_SYSTEM_BUS_ADDRESS=unix:path=/var/run/dbus/system_bus_socket"
         X11_OPTION="-e DISPLAY=$DISPLAY -v /dev/shm:/dev/shm -v /tmp/.X11-unix:/tmp/.X11-unix"
         echo "X11_OPTION=${X11_OPTION}"
-        docker run \
-            --name=${instanceName} \
-            --restart=${RESTART_OPTION} \
-            ${GPU_OPTION} \
-            ${MEDIA_OPTIONS} \
-            ${REMOVE_OPTION} ${RUN_OPTION} ${MORE_OPTIONS} ${CERTIFICATE_OPTIONS} \
-            ${X11_OPTION} \
-            ${privilegedString} \
-            ${USER_OPTIONS} \
-            ${ENV_VARS} \
-            ${VOLUME_MAP} \
-            ${PORT_MAP} \
-            ${imageTag} \
-            $@
+        bash -c "docker run --name=${instanceName} --restart=${RESTART_OPTION} ${GPU_OPTION} ${MEDIA_OPTIONS} ${REMOVE_OPTION} ${RUN_OPTION} ${HOSTS_OPTIONS} ${MISC_OPTIONS} ${MORE_OPTIONS} ${CERTIFICATE_OPTIONS} ${X11_OPTION} ${privilegedString} ${USER_OPTIONS} ${ENV_VARS} ${VOLUME_MAP} ${PORT_MAP} ${imageTag}" $@
         ;;
     2)
         #### 2: VNC/noVNC container build image type
@@ -891,18 +928,7 @@ case "${BUILD_TYPE}" in
             VNC_RESOLUTION=1920x1080
             ENV_VARS="${ENV_VARS} -e VNC_RESOLUTION=${VNC_RESOLUTION}" 
         fi
-        docker run \
-            --name=${instanceName} \
-            --restart=${RESTART_OPTION} \
-            ${GPU_OPTION} \
-            ${REMOVE_OPTION} ${RUN_OPTION} ${MORE_OPTIONS} ${CERTIFICATE_OPTIONS} \
-            ${privilegedString} \
-            ${USER_OPTIONS} \
-            ${ENV_VARS} \
-            ${VOLUME_MAP} \
-            ${PORT_MAP} \
-            ${imageTag} \
-            $@
+        bash -c "docker run --name=${instanceName} --restart=${RESTART_OPTION} ${REMOVE_OPTION} ${RUN_OPTION} ${HOSTS_OPTIONS} ${MISC_OPTIONS} ${MORE_OPTIONS} ${CERTIFICATE_OPTIONS} ${privilegedString} ${USER_OPTIONS} ${ENV_VARS} ${VOLUME_MAP} ${PORT_MAP} ${imageTag}" $@
         ;;
 
 esac
