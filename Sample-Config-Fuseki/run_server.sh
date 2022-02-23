@@ -17,6 +17,7 @@ rlog() {
   echo -e "${RED}${1}${NC}"
 }
 
+HOST="http://0.0.0.0:3030"
 RUN_LATEST_FUSEKI=1
 if [ ${RUN_LATEST_FUSEKI} -lt 1 ]; then
     ## -- Apache Jean Fuseki v3.7.0: -- ##
@@ -33,7 +34,7 @@ log "Interface running at ${HOST}"
 sleep 8s
 
 FBIN="${FUSEKI_HOME}/bin"
-HOST="http://0.0.0.0:3030"
+
 #${FBIN}/s-put ${HOST}/dataset/data default data/raw/persons_and_cars.ttl
 
 #${FBIN}/s-put ${HOST}/foaf/data default data/raw/foaf_person.ttl

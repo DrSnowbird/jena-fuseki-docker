@@ -3,3 +3,7 @@
 **/workspace
 
 *swp
+**/run
+*log
+
+**Sample-Config-Fuseki/

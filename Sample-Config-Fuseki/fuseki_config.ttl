@@ -16,34 +16,33 @@
     fuseki:serviceReadWriteGraphStore "data" ;     # SPARQL Graph store protocol (read and write)
     # A separate read-only graph store endpoint:
     fuseki:serviceReadGraphStore      "get" ;      # SPARQL Graph store protocol (read only)
-    fuseki:dataset                    <#dataset> ;
+    fuseki:dataset                   <#dataset> ;
     .
 
 <#service2> rdf:type fuseki:Service ;
     fuseki:name                     "foaf_person" ;   # http://host:port/ds-ro
     fuseki:serviceQuery             "query" ;    # SPARQL query service
     fuseki:serviceReadGraphStore    "data" ;     # SPARQL Graph store protocol (read only)
-    fuseki:dataset                  <#foaf_person> ;
+    fuseki:dataset           <#foaf_person> ;
     .
 
 <#service3> rdf:type fuseki:Service ;
     fuseki:name                     "foaf_person_res" ;   # http://host:port/ds-ro
     fuseki:serviceQuery             "query" ;    # SPARQL query service
     fuseki:serviceReadGraphStore    "data" ;     # SPARQL Graph store protocol (read only)
-    fuseki:dataset                  <#personRes> ;
+    fuseki:dataset           <#personRes> ;
     .
-    
-<#service4> rdf:type fuseki:Service ;
-    fuseki:name                       "ex_person" ;       # http://host:port/ds
-    fuseki:serviceQuery               "sparql" ;   # SPARQL query service
-    fuseki:serviceQuery               "query" ;    # SPARQL query service (alt name)
-    fuseki:serviceUpdate              "update" ;   # SPARQL update service
-    fuseki:serviceUpload              "upload" ;   # Non-SPARQL upload service
-    fuseki:serviceReadWriteGraphStore "data" ;     # SPARQL Graph store protocol (read and write)
-    # A separate read-only graph store endpoint:
-    fuseki:serviceReadGraphStore      "get" ;      # SPARQL Graph store protocol (read only)
-    fuseki:dataset                    <#ex_person> ;
-    .
+  <#service4> rdf:type fuseki:Service ;
+      fuseki:name                       "ex_person" ;       # http://host:port/ds
+      fuseki:serviceQuery               "sparql" ;   # SPARQL query service
+      fuseki:serviceQuery               "query" ;    # SPARQL query service (alt name)
+      fuseki:serviceUpdate              "update" ;   # SPARQL update service
+      fuseki:serviceUpload              "upload" ;   # Non-SPARQL upload service
+      fuseki:serviceReadWriteGraphStore "data" ;     # SPARQL Graph store protocol (read and write)
+      # A separate read-only graph store endpoint:
+      fuseki:serviceReadGraphStore      "get" ;      # SPARQL Graph store protocol (read only)
+      fuseki:dataset                   <#ex_person> ;
+      .
 
 <#service5> rdf:type fuseki:Service ;
     fuseki:name                       "dbo_person" ;       # http://host:port/ds
@@ -54,7 +53,7 @@
     fuseki:serviceReadWriteGraphStore "data" ;     # SPARQL Graph store protocol (read and write)
     # A separate read-only graph store endpoint:
     fuseki:serviceReadGraphStore      "get" ;      # SPARQL Graph store protocol (read only)
-    fuseki:dataset                    <#dbo_person_dataset> ;
+    fuseki:dataset                   <#dbo_person_dataset> ;
     .
 
 <#service6> rdf:type fuseki:Service ;
@@ -66,7 +65,7 @@
     fuseki:serviceReadWriteGraphStore "data" ;     # SPARQL Graph store protocol (read and write)
     # A separate read-only graph store endpoint:
     fuseki:serviceReadGraphStore      "get" ;      # SPARQL Graph store protocol (read only)
-    fuseki:dataset                    <#mutation_dataset> ;
+    fuseki:dataset                   <#mutation_dataset> ;
     .
 <#service7> rdf:type fuseki:Service ;
     fuseki:name                       "mutation2" ;       # http://host:port/ds
@@ -77,7 +76,7 @@
     fuseki:serviceReadWriteGraphStore "data" ;     # SPARQL Graph store protocol (read and write)
     # A separate read-only graph store endpoint:
     fuseki:serviceReadGraphStore      "get" ;      # SPARQL Graph store protocol (read only)
-    fuseki:dataset                    <#mutation_dataset2> ;
+    fuseki:dataset                   <#mutation_dataset2> ;
     .
 <#service8> rdf:type fuseki:Service ;
     fuseki:name                       "nested_queries" ;       # http://host:port/ds
@@ -88,7 +87,7 @@
     fuseki:serviceReadWriteGraphStore "data" ;     # SPARQL Graph store protocol (read and write)
     # A separate read-only graph store endpoint:
     fuseki:serviceReadGraphStore      "get" ;      # SPARQL Graph store protocol (read only)
-    fuseki:dataset                     <#dataset_nested_queries> ;
+    fuseki:dataset                   <#dataset_nested_queries> ;
     .
 
 <#mutation_dataset2>    rdf:type ja:RDFDataset ;
@@ -97,14 +96,12 @@
         ja:content [ja:externalContent <file:data/mutations_dataset.ttl> ] ;
         ] ;
         .
-        
 <#mutation_dataset>    rdf:type ja:RDFDataset ;
     ja:defaultGraph
         [ a ja:MemoryModel ;
         ja:content [ja:externalContent <file:data/mutations_dataset.ttl> ] ;
         ] ;
         .
-        di
 <#dataset>    rdf:type ja:RDFDataset ;
     ja:defaultGraph
         [ a ja:MemoryModel ;
@@ -134,13 +131,13 @@
         .
 
 <#personRes> rdf:type ja:RDFDataset;
-    ja:defaultGraph <#inferenceModel>
-    .
+     ja:defaultGraph <#inferenceModel>
+     .
 
 <#inferenceModel> rdf:type      ja:InfModel;
-    ja:reasoner [ ja:reasonerURL <http://jena.hpl.hp.com/2003/OWLMicroFBRuleReasoner> ];
-    ja:content [ja:externalContent <file:data/raw/foaf_person_cross_relations.ttl>] ;
-    .
+     ja:reasoner [ ja:reasonerURL <http://jena.hpl.hp.com/2003/OWLMicroFBRuleReasoner> ];
+     ja:content [ja:externalContent <file:data/raw/foaf_person_cross_relations.ttl>] ;
+     .
 
 <#dbo_person_dataset>    rdf:type ja:RDFDataset ;
     ja:defaultGraph
