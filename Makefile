@@ -107,9 +107,10 @@ up:
 	@if [ ! -s databases ]; then \
 		mkdir databases; \
 	else \
-		sudo chown -R 1000:1000 databases; \
+		sudo chown -R $(USER):$(USER) databases; \
 	fi
-	docker-compose up --remove-orphans -d
+	#docker-compose up --remove-orphans -d
+	./run.sh -d -r always
 
 down:
 	docker-compose down
