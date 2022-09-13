@@ -1,9 +1,9 @@
 version: '3.1' 
 
 services:
-  jena-fuseki-docker:
-    container_name: jena-fuseki-docker
-    image: openkbs/jena-fuseki-docker
+  {{CONTAINER_NAME}}:
+    container_name: {{CONTAINER_NAME}}
+    image: {{ORG_NAME}}/{{CONTAINER_NAME}}
     build:
       context: .
       dockerfile: Dockerfile
@@ -11,13 +11,13 @@ services:
     env_file:
       - ./.env
     environment:
-      - CONTAINER_NAME=jena-fuseki-docker
+      - CONTAINER_NAME={{CONTAINER_NAME}}
       - USER_ID=${USER_ID:-1000}
       - GROUP_ID=${GROUP_ID:-1000}
       # - APP_HOME=${APP_HOME:-/home/developer/app}
       # - APP_MAIN=${APP_MAIN:-setup.sh}
-      - DOCKER_HOST_IP=${DOCKER_HOST_IP:-192.168.0.124}
-      - DOCKER_HOST_NAME=${DOCKER_HOST_NAME:-aurora}
+      - DOCKER_HOST_IP=${DOCKER_HOST_IP:-{{DOCKER_HOST_IP}}}
+      - DOCKER_HOST_NAME=${DOCKER_HOST_NAME:-{{DOCKER_HOST_NAME}}}
       # ==== X11 Use only ====
       #- DISPLAY=$DISPLAY
       #- DBUS_SYSTEM_BUS_ADDRESS=unix:path=/host/run/dbus/system_bus_socket
@@ -43,24 +43,20 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
       #- ./certificates:/home/developer/certificates
       ## ==== Use $HOME/data-docker as base directory: ====
-      #- $HOME/data-docker/jena-fuseki-docker/data:/home/developer/data
-      #- $HOME/data-docker/jena-fuseki-docker/workspace:/home/developer/workspace
+      #- $HOME/data-docker/{{CONTAINER_NAME}}/data:/home/developer/data
+      #- $HOME/data-docker/{{CONTAINER_NAME}}/workspace:/home/developer/workspace
       ## ==== Use current directory as root for mapping Volumes: ====
       ## (You need to manually create those child directory: ./data, ./workspace, and others)
       #- ./data:/home/developer/data
       #- ./workspace:/home/developer/workspace
       ## ==== App's additional mapping Volumes: ====
-      - /home/user1/data-docker/jena-fuseki-docker/fuseki:/home/developer/fuseki
-      - /home/user1/data-docker/jena-fuseki-docker/workspace:/home/developer/workspace
-
+      #{{MORE_VOLUMES_MAPPING}}
     ## -------------------------------
     ## -- Change to your specific port
     ## -------------------------------
     # ports:
     #   - "12345:12345"
-    ports:
-      - "13030:3030"
-
+    #{{PORTS_MAPPING}}
     ## -----------------------------
     ## -- Network setup if needed --
     ## -----------------------------
@@ -68,7 +64,7 @@ services:
     #  - dev_network
 
 #volumes:
-#    jena-fuseki-docker_volume:
+#    {{CONTAINER_NAME}}_volume:
 #        external: false
 
 #networks:
