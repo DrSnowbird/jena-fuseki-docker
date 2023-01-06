@@ -57,6 +57,9 @@ RUN sudo chmod +x /docker-entrypoint.sh ${FUSEKI_HOME}/load.sh ${FUSEKI_HOME}/td
 ## -- Disabling JNDI functionality -- ##
 ENV OG4J_FORMAT_MSG_NO_LOOKUPS=true
 
+## -- add envsubst: -- ##
+RUN sudo apt-get install -y gettext-base
+
 #VOLUME /staging
 
 USER ${USER}

@@ -16,7 +16,7 @@ services:
       - GROUP_ID=${GROUP_ID:-1000}
       # - APP_HOME=${APP_HOME:-/home/developer/app}
       # - APP_MAIN=${APP_MAIN:-setup.sh}
-      - DOCKER_HOST_IP=${DOCKER_HOST_IP:-192.168.0.124}
+      - DOCKER_HOST_IP=${DOCKER_HOST_IP:-192.168.0.125}
       - DOCKER_HOST_NAME=${DOCKER_HOST_NAME:-aurora}
       # ==== X11 Use only ====
       #- DISPLAY=$DISPLAY
