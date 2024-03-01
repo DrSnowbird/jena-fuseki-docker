@@ -5,14 +5,16 @@ If [ you are looking for such a common requirement as a base Container ]:
    Then [ this one may be for you ]
 ```
 
-# (`NEW`) CVE Log4J Vulability
-* Dockerfile added built-in system environment variable
+# Updates (2024/03/01):
+* Need newer or latest openjdk version 17 or above. (It is recommended you git pull the "openkbs/python-nonroot-docker" and rebuild newer image to avoid build error of this Container)
+* Dockerfile added built-in system environment variable (previously updated)
+* CVE Log4J Vulability (previously updated)
 ```
 ENV LOG4J_FORMAT_MSG_NO_LOOKUPS=true
 ```
 
 # Credits:
-* This project leveraged many what Stain's stain/jena-docker GIT project though it's not directly forked.
+* This project leveraged many from Stain's stain/jena-docker GIT project though it's not directly forked.
 
 # Components:
 * OpenJDK Java 11 base image + Non-root User (/home/developer)
@@ -23,6 +25,9 @@ ENV LOG4J_FORMAT_MSG_NO_LOOKUPS=true
   * Note, you should consult Docker security experts in how to secure your Container for your production use!)
 
 # Build (do this first!)
+* Note that this build need to use the Java version 17 or above.
+* It is recommended you git pull the "openkbs/python-nonroot-docker" to the latest and then 
+build the new version before you build this Container.
 ```
 ./build.sh
 ```
@@ -39,6 +44,7 @@ To access Web UI:
 ```
 http://0.0.0.0:13030/
 ```
+* Login for admin user: see .env file
 
 # Quick commands
 * build.sh - build local image
@@ -81,3 +87,6 @@ HTTP RDF Content negotiation should work from "http://schema.org/" and include a
 * application/n-triples (Ntriples)
 * application/ld+json (JSON-LD)
 * application/xhtml+xml (RDFa)
+
+# Resources:
+* [Fuseki Docker](https://jena.apache.org/documentation/fuseki2/fuseki-docker.html)

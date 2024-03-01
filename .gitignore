@@ -9,5 +9,10 @@
 **Sample-Config-Fuseki/
 
 **BACKUP/
+**/*.zip
+**/*.tgz
+**/*.tar
+
+**tmp/
 
 **certificates/
