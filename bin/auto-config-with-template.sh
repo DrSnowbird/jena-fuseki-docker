@@ -1,4 +1,4 @@
-#!/bin/bash -x
+#!/bin/bash
 
 set -e
 
@@ -36,8 +36,13 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 
 PROJ_DIR=$(dirname $DIR)
 
-CONTAINER_NAME=$(basename $PROJ_DIR)
+CONTAINER_NAME=`echo $(basename $PROJ_DIR)|tr '[:upper:]' '[:lower:]'|tr "/: " "_" `
 
+## -----------------------
+## -- HOSt TimeZone:   --
+## -----------------------
+#DOCKER_HOST_TIMEZONE=$(cat /etc/timezone)
+DOCKER_HOST_TIMEZONE=${DOCKER_HOST_TIMEZONE:-UTC}
 
 ## -----------------------
 ## -- Organization Name --
@@ -164,6 +169,8 @@ for f in $files; do
     cp $f ${AUTO_GEN_FILE}
     sed -i ${SED_MAC_FIX} "s#{{CONTAINER_NAME}}#$CONTAINER_NAME#g" ${AUTO_GEN_FILE}
     sed -i ${SED_MAC_FIX} "s#{{DOCKER_HOST_IP}}#$DOCKER_HOST_IP#g" ${AUTO_GEN_FILE}
+    sed -i ${SED_MAC_FIX} "s#{{DOCKER_NETWORK}}#$DOCKER_NETWORK#g" ${AUTO_GEN_FILE}
+    sed -i ${SED_MAC_FIX} "s#{{DOCKER_HOST_TIMEZONE}}#$DOCKER_HOST_TIMEZONE#g" ${AUTO_GEN_FILE}
     sed -i ${SED_MAC_FIX} "s#{{DOCKER_HOST_NAME}}#$DOCKER_HOST_NAME#g" ${AUTO_GEN_FILE}
     sed -i ${SED_MAC_FIX} "s#{{ORG_NAME}}#$ORG_NAME#g" ${AUTO_GEN_FILE}
     cat ${AUTO_GEN_FILE}
@@ -172,15 +179,17 @@ for f in $files; do
     # Template file name should be .env.template or docker-compose.yml.template:
     # So, the trailing ".template" will be removed to be used to generate the target file.
     target_filename=${f%%.template} # docker-compose.yml
-    if [ -s  ]; then
-        if [ ! -d ${target_filename}.BACKUP ]; then
-            mkdir -p ${target_filename}.BACKUP
-        fi
-        cp ${CP_OPTION} ${target_filename} ${target_filename}.BACKUP/
-        echo "... Old ${target_filename} file is save to: ${target_filename}.BACKUP/"
+    #if [ -s ${target_filename} ]; then
+        #if [ ! -d ${target_filename}.BACKUP ]; then
+        #    mkdir -p ${target_filename}.BACKUP
+        #fi
+        #if [ -s ${target_filename} ]; then
+            #cp ${CP_OPTION} ${target_filename} ${target_filename}.BACKUP/
+            #echo "... Old ${target_filename} file is save to: ${target_filename}.BACKUP/"
+        #fi
         #mv ${target_filename} ${target_filename}.BACKUP/${target_filename}_$(date '+%F').SAVE
         # echo "... Old ${target_filename} file is save to: ${target_filename}_$(date '+%F').SAVE"
-    fi
+    #fi
     mv ${AUTO_GEN_FILE} ${target_filename}
 done
 

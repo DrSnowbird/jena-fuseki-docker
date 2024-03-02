@@ -10,6 +10,7 @@ services:
     restart: always
     env_file:
       - ./.env
+    user: "1000:1000"
     environment:
       - CONTAINER_NAME=jena-fuseki-docker
       - USER_ID=${USER_ID:-1000}
